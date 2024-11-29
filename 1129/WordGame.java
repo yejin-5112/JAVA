@@ -40,7 +40,6 @@ public class WordGame {
         frame.setSize(600, 400);
         frame.setLayout(new BorderLayout());
 
-        // Create a panel for the top section with title and "New Text" button
         JPanel topPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
         sentenceLabel = new JLabel("단어 조합 게임! 순서대로 단어를 클릭하세요~~");
         sentenceLabel.setFont(new Font("Arial", Font.BOLD, 16));
@@ -50,7 +49,7 @@ public class WordGame {
         topPanel.add(newTextButton);
         frame.add(topPanel, BorderLayout.NORTH);
 
-        wordPanel = new JPanel(null); // Allow free positioning
+        wordPanel = new JPanel(null);
         wordPanel.setPreferredSize(new Dimension(600, 300));
 
         bottomPanel = new JPanel(new BorderLayout());
@@ -70,11 +69,10 @@ public class WordGame {
         frame.add(bottomPanel, BorderLayout.SOUTH);
 
         frame.setVisible(true);
-        startNewText(); // Start the first round
+        startNewText();
     }
 
     private void startNewText() {
-        // Clear previous text
         resultLabel.setText(">> ");
         clickedWordsLabel.setText(">> ");
 
@@ -82,24 +80,21 @@ public class WordGame {
             timer.stop();
         }
 
-        // Select a random sentence
         currentSentence = sentences[new Random().nextInt(sentences.length)];
         userSentence = new StringBuilder();
         clickedWordsCount = 0;
 
-        // Split the sentence into words and shuffle them
         String[] words = currentSentence.split(" ");
         ArrayList<String> wordList = new ArrayList<>(Arrays.asList(words));
         Collections.shuffle(wordList);
 
-        wordPanel.removeAll(); // Clear previous words
+        wordPanel.removeAll();
         wordLabels = new ArrayList<>();
 
-        // Create and display the shuffled word labels
         for (int i = 0; i < wordList.size(); i++) {
             JLabel wordLabel = new JLabel(wordList.get(i));
             wordLabel.setFont(new Font("Arial", Font.PLAIN, 20));
-            wordLabel.setBounds(50 + (i % 5) * 100, 50 + (i / 5) * 50, 80, 30); // Random position
+            wordLabel.setBounds(50 + (i % 5) * 100, 50 + (i / 5) * 50, 80, 30);
             wordLabel.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
             wordLabel.addMouseListener(new WordClickListener(wordLabel));
             wordPanel.add(wordLabel);
@@ -109,7 +104,6 @@ public class WordGame {
         wordPanel.revalidate();
         wordPanel.repaint();
 
-        // Start the timer
         seconds = 0;
         timerLabel.setText("Time: " + seconds + "s");
         timer = new javax.swing.Timer(1000, new ActionListener() {
@@ -119,7 +113,7 @@ public class WordGame {
                 timerLabel.setText("Time: " + seconds + "s");
             }
         });
-        timer.start();  // 타이머 시작
+        timer.start();
     }
 
     private class WordClickListener extends MouseAdapter {
@@ -131,9 +125,8 @@ public class WordGame {
 
         @Override
         public void mouseClicked(MouseEvent e) {
-            // Check if the word has already been clicked
             if (!wordLabel.isEnabled()) {
-                return; // Ignore if the word has already been clicked
+                return;
             }
 
             String word = wordLabel.getText();
@@ -141,11 +134,9 @@ public class WordGame {
             clickedWordsCount++;
             clickedWordsLabel.setText(">> " + userSentence.toString().trim());
 
-            // Disable further clicks on this word and change color to light gray
-            wordLabel.setEnabled(false); // Disable further interaction
-            wordLabel.setForeground(Color.LIGHT_GRAY); // Change the color of clicked word
+            wordLabel.setEnabled(false);
+            wordLabel.setForeground(Color.LIGHT_GRAY);
 
-            // If the user completes the sentence, show success or failure message
             if (clickedWordsCount == wordLabels.size()) {
                 timer.stop();
                 if (userSentence.toString().trim().equals(currentSentence)) {
